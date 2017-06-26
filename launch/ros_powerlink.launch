@@ -2,7 +2,6 @@
 
 <launch> 
 
-  <!--node pkg="powerlink_2" type="powerlink_2" name="powerlink_2" launch-prefix="xterm -e"/>-->
-  <node pkg="powerlink_3" type="powerlink_3" name="powerlink_3" output="screen"/>
+  <node pkg="ros_powerlink" type="ros_powerlink" name="ros_powerlink" output="screen"/>
 
 </launch>
