@@ -143,7 +143,7 @@ This is the main function of the openPOWERLINK console CN demo application.
 //------------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
-  ros::init(argc,argv,"powerlink_2");
+  ros::init(argc,argv,"powerlink");
   ros::NodeHandle oplk_node;
   node_id(&oplk_node);
 
