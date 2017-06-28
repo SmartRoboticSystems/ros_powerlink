@@ -10,7 +10,7 @@
 
 #include <app.h>
 
-#include <powerlink_3/openPowerlinkMsg.h>
+#include <ros_powerlink/openPowerlinkMsg.h>
 
 //------------------------------------------------------------------------------
 // local types
@@ -57,7 +57,7 @@ void node_id(ros::NodeHandle *node)
     node_oplk = node;
 }
 
-void readDataToPLC(const powerlink_3::openPowerlinkMsgPtr& msg)
+void readDataToPLC(const ros_powerlink::openPowerlinkMsgPtr& msg)
 {
     char i;
 
@@ -92,7 +92,7 @@ tOplkError initApp(void)
     tOplkError ret = kErrorOk;
 
     data_subscriber = node_oplk->subscribe("/powerlink/data_to_plc",1,&readDataToPLC);
-    data_publisher = node_oplk->advertise<powerlink_3::openPowerlinkMsg>("/powerlink/data_from_plc",1);
+    data_publisher = node_oplk->advertise<ros_powerlink::openPowerlinkMsg>("/powerlink/data_from_plc",1);
 
     ret = initProcessImage();
 
