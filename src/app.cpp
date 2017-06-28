@@ -48,9 +48,9 @@ static tOplkError initProcessImage(void);
 
 ros::NodeHandle *node_oplk;
 ros::Publisher data_publisher;
-powerlink_3::openPowerlinkMsg mgs_input;
+ros_powerlink::openPowerlinkMsg mgs_input;
 ros::Subscriber data_subscriber;
-powerlink_3::openPowerlinkMsg msg_output;
+ros_powerlink::openPowerlinkMsg msg_output;
 
 void node_id(ros::NodeHandle *node)
 {
