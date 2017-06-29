@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(ros_powerlink)
 
-SET(OPLK_BASE_DIR /home/user/openPOWERLINK_V2.5.2)
+SET(OPLK_BASE_DIR /home/jan/openPOWERLINK_V2.6.0)
 SET(CFG_BUILD_KERNEL_STACK "Linux Kernel Module")
 SET(CMAKE_BUILD_TYPE "Release")
 SET(CFG_STORE_RESTORE)

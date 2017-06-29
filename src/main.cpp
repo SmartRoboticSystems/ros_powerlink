@@ -143,12 +143,15 @@ This is the main function of the openPOWERLINK console CN demo application.
 //------------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
-  ros::init(argc,argv,"powerlink");
+  ros::init(argc,argv,"ros_powerlink");
   ros::NodeHandle oplk_node;
   node_id(&oplk_node);
 
     tOplkError  ret = kErrorOk;
     tOptions    opts;
+
+    if (getOptions(argc, argv, &opts) < 0)
+        return 0;
 
     if (system_init() != 0)
     {
@@ -164,13 +167,13 @@ int main(int argc, char* argv[])
     initEvents(&fGsOff_l);
 
     printf("----------------------------------------------------\n");
-    printf("openPOWERLINK DEMO application\n");
+    printf("openPOWERLINK console CN DEMO application\n");
     printf("Using openPOWERLINK stack: %s\n", oplk_getVersionString());
     printf("----------------------------------------------------\n");
 
     eventlog_printMessage(kEventlogLevelInfo,
                           kEventlogCategoryGeneric,
-                          "Demo ROS: Stack version:%s Stack configuration:0x%08X",
+                          "demo_cn_console: Stack version:%s Stack configuration:0x%08X",
                           oplk_getVersionString(),
                           oplk_getStackConfiguration());
 
@@ -372,9 +375,22 @@ static void loopMain(void)
     if (ret != kErrorOk)
         return;
 
+    printf("Start POWERLINK stack... ok\n");
+    printf("Digital I/O interface with openPOWERLINK is ready!\n");
+    printf("\n-------------------------------\n");
+    printf("Press Esc to leave the program\n");
+    printf("Press r to reset the node\n");
+    printf("Press i to increase the digital input\n");
+    printf("Press d to decrease the digital input\n");
+    printf("Press p to print the digital outputs\n");
+    printf("-------------------------------\n\n");
+
+
+
     // wait for key hit
     while (!fExit)
     {
+ 
         if (system_getTermSignalState() == TRUE)
         {
             fExit = TRUE;
@@ -444,3 +460,76 @@ static void shutdownPowerlink(void)
     oplk_destroy();
     oplk_exit();
 }
+
+//------------------------------------------------------------------------------
+/**
+\brief  Get command line parameters
+
+The function parses the supplied command line parameters and stores the
+options at pOpts_p.
+
+\param[in]      argc_p              Argument count.
+\param[in]      argv_p              Pointer to arguments.
+\param[out]     pOpts_p             Pointer to store options
+
+\return The function returns the parsing status.
+\retval 0           Successfully parsed
+\retval -1          Parsing error
+*/
+//------------------------------------------------------------------------------
+static int getOptions(int argc_p,
+                      char* const argv_p[],
+                      tOptions* pOpts_p)
+{
+    int opt;
+
+    /* setup default parameters */
+    strncpy(pOpts_p->devName, "\0", 128);
+    pOpts_p->nodeId = NODEID;
+    pOpts_p->logFormat = kEventlogFormatReadable;
+    pOpts_p->logCategory = 0xffffffff;
+    pOpts_p->logLevel = 0xffffffff;
+
+    /* get command line parameters */
+    while ((opt = getopt(argc_p, argv_p, "n:pv:t:d:")) != -1)
+    {
+        switch (opt)
+        {
+            case 'n':
+                pOpts_p->nodeId = strtoul(optarg, NULL, 10);
+                break;
+
+            case 'd':
+                strncpy(pOpts_p->devName, optarg, 128);
+                break;
+
+            case 'p':
+                pOpts_p->logFormat = kEventlogFormatParsable;
+                break;
+
+           case 'v':
+                pOpts_p->logLevel = strtoul(optarg, NULL, 16);
+                break;
+
+           case 't':
+                pOpts_p->logCategory = strtoul(optarg, NULL, 16);
+                break;
+
+            default: /* '?' */
+#if defined(CONFIG_USE_PCAP)
+                printf("Usage: %s [-n NODE_ID] [-l LOGFILE] [-d DEV_NAME] [-v LOGLEVEL] [-t LOGCATEGORY] [-p]\n", argv_p[0]);
+                printf(" -d DEV_NAME: Ethernet device name to use e.g. eth1\n");
+#else
+                printf("Usage: %s [-n NODE_ID] [-l LOGFILE] [-v LOGLEVEL] [-t LOGCATEGORY] [-p]\n", argv_p[0]);
+#endif
+                printf(" -p: Use parsable log format\n");
+                printf(" -v LOGLEVEL: A bit mask with log levels to be printed in the event logger\n");
+                printf(" -t LOGCATEGORY: A bit mask with log categories to be printed in the event logger\n");
+
+                return -1;
+        }
+    }
+    return 0;
+}
+
+/// \}
