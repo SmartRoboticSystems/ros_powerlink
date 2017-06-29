@@ -46,9 +46,6 @@ SET (ARCH_SOURCES
 ################################################################################
 # Set architecture specific libraries
 
-IF (CFG_KERNEL_STACK_DIRECTLINK OR CFG_KERNEL_STACK_USERSPACE_DAEMON)
-    SET (ARCH_LIBRARIES ${ARCH_LIBRARIES} pcap)
-ENDIF (CFG_KERNEL_STACK_DIRECTLINK OR CFG_KERNEL_STACK_USERSPACE_DAEMON)
 SET (ARCH_LIBRARIES ${ARCH_LIBRARIES} pthread rt)
 
 ################################################################################
